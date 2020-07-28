@@ -6,15 +6,27 @@ import toml
 import os
 import datetime
 
+# todo: make this more robust to entries not being present
 def write_config_file(bibtex_entry, fname):
 
   authors = bibtex_entry['author'].split(" and ")
   title = bibtex_entry['title'].replace("{", "").replace("}", "") # todo: remove braces {} and etc
 
   doi = bibtex_entry['doi']
-  journal = bibtex_entry['journal']
-  volume = int(bibtex_entry['volume'])
-  number = int(bibtex_entry['number'])
+  try:
+    journal = bibtex_entry['journal']
+  except KeyError:
+    journal = None
+
+  try:
+    volume = int(bibtex_entry['volume'])
+  except KeyError:
+    volume = None
+
+  try:
+    number = int(bibtex_entry['number'])
+  except KeyError:
+    number = None
 
   year = int(bibtex_entry['year'])
   month = datetime.datetime.strptime(bibtex_entry['month'], "%b").month
@@ -39,9 +51,14 @@ def write_config_file(bibtex_entry, fname):
              "# 7 = Thesis; 8 = Patent\n" \
              "publication_types: [\"2\"]\n"
 
-  md_file += "\n# Publication name and optional abbreviated publication name.\n" \
-             "publication: \"*%s*, <b>%d</b> %d (%04d)\"\n" \
-             "publication_short: \"\"\n" % (journal, volume, number, year)
+  if not journal is None and not volume is None and not number is None:
+    md_file += "\n# Publication name and optional abbreviated publication name.\n" \
+               "publication: \"*%s*, <b>%d</b> %d (%04d)\"\n" \
+               "publication_short: \"\"\n" % (journal, volume, number, year)
+  else:
+    md_file += "\n# Publication name and optional abbreviated publication name.\n" \
+               "publication: \"\"\n" \
+               "publication_short: \"\"\n"
 
   md_file += "\nabstract: \"%s\"\n" % bibtex_entry['abstract']
 
