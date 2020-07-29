@@ -1,8 +1,12 @@
 """
 Given a bibtex file, generate toml configuration files
+
+Here is the idea: when you want to add a new publication, add it to the file "pubs.bib". Then run this file to
+automatically generate a folder containing an "index.md" and "cite.bib" file.
+
+todo: latex is not correctly rendered in the author's names, and have problems with non ascii characters in the abstracts
 """
 import bibtexparser
-import toml
 import os
 import datetime
 
