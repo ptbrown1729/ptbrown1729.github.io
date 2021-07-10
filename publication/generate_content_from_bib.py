@@ -146,5 +146,6 @@ if __name__ == "__main__":
 
     # write toml file
     fpath_md = os.path.join(dir_path, md_fname)
+    print("writing file %s" % fpath_md)
     write_config_file(entry, fpath_md)
 
